@@ -1,0 +1,42 @@
+sudo: false
+language: cpp
+git:
+  submodules: false
+
+matrix:
+  include:
+    - env: _CXX=g++-5 _CC=gcc-5
+      addons:
+        apt:
+          packages:
+            - g++-5
+          sources: &sources
+            - llvm-toolchain-precise
+            - ubuntu-toolchain-r-test
+    - env: _CXX=clang++-3.8 _CC=clang-3.8
+      addons:
+        apt:
+          packages:
+            - clang-3.8
+          sources: *sources
+
+install:
+  - export PATH="$HOME/bin:$PATH"
+  - export CXX="$_CXX" CC="$_CC"
+  -
+  - mkdir ~/bin
+  - wget --no-check-certificate --no-clobber -O /tmp/tools/waf https://waf.io/waf-1.8.14 || true
+  - install -t ~/bin /tmp/tools/waf
+
+before_script:
+  - git submodule update --init --recursive
+
+script:
+  - waf configure
+  - waf
+#  - build/grammar_test --reporter=info
+
+cache:
+  apt: true
+  directories:
+    - /tmp/tools

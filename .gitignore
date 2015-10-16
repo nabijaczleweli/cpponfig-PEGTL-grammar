@@ -26,3 +26,9 @@
 *.exe
 *.out
 *.app
+
+# Miscellaneous
+*.s*-toks
+*.s*-workspace
+.*waf*
+build/
