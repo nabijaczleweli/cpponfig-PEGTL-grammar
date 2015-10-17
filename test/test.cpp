@@ -31,7 +31,7 @@
 		for(const auto & tststr : var) {                                                                                          \
 			const auto parseres = pegtl::parse<pegtl::seq<cpponfig::grammar::rule, pegtl::eof>>(tststr, #var "#" + to_string(idx)); \
 			cout << name << " #" << idx << ": " << parseres << '\n';                                                                \
-			result |= !parseres;                                                                                                    \
+			result += !parseres;                                                                                                    \
 			++idx;                                                                                                                  \
 		}                                                                                                                         \
 	} while(false)
@@ -59,7 +59,7 @@ static const string sof_comments_test[] = {"#fasdfsadfasdf\n"
 int main() {
 	cout << boolalpha;
 
-	bool result = false;
+	int result{};
 
 	TEST_RULE(comment, comment_test, "Comment");
 	TEST_RULE(line_comment, line_comment_test, "Line comment");
