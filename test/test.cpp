@@ -25,13 +25,15 @@
 #include <iostream>
 #include <string>
 
-#define TEST_RULE(rule, var, name)                                                                    \
-	do {                                                                                                \
-		size_t idx{};                                                                                     \
-		for(const auto & tststr : var) {                                                                  \
-			const auto result = pegtl::parse<cpponfig::grammar::rule>(tststr, #var "#" + to_string(++idx)); \
-			cout << name << " #" << idx << ": " << result << '\n';                                          \
-		}                                                                                                 \
+#define TEST_RULE(rule, var, name)                                                                                            \
+	do {                                                                                                                        \
+		size_t idx{};                                                                                                             \
+		for(const auto & tststr : var) {                                                                                          \
+			const auto parseres = pegtl::parse<pegtl::seq<cpponfig::grammar::rule, pegtl::eof>>(tststr, #var "#" + to_string(idx)); \
+			cout << name << " #" << idx << ": " << parseres << '\n';                                                                \
+			result |= !parseres;                                                                                                    \
+			++idx;                                                                                                                  \
+		}                                                                                                                         \
 	} while(false)
 
 
@@ -57,7 +59,11 @@ static const string sof_comments_test[] = {"#fasdfsadfasdf\n"
 int main() {
 	cout << boolalpha;
 
+	bool result = false;
+
 	TEST_RULE(comment, comment_test, "Comment");
 	TEST_RULE(line_comment, line_comment_test, "Line comment");
 	TEST_RULE(sof_comments, sof_comments_test, "SOF comment");
+
+	return result;
 }
