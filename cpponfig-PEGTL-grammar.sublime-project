@@ -19,7 +19,7 @@
 		},
 		{
 			"working_dir": "$project_path",
-			"shell_cmd": "build\\grammar_test --reporter=spec",
+			"shell_cmd": "build\\cpponfig-grammar_test --reporter=spec",
 			"name": "Run cpponfig-PEGTL-grammar tests",
 		}
 	],
