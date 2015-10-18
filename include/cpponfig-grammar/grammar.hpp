@@ -24,6 +24,7 @@
 #pragma once
 
 
+#include <iostream>
 #include "pegtl.hh"
 
 
@@ -76,6 +77,28 @@ namespace cpponfiguration {
 		                  opt<eolf, comment>,  //
 		                  star<eol>,           //
 		                  eof> {};
+
+
+		template <class Rule>
+		struct action : nothing<Rule> {};
+
+		template <>
+		struct action<line_comment> {
+			template <class T0, class LineCommentsAcc, class... TT>
+			static void apply(const input & in, T0 &&, LineCommentsAcc & acc, TT &&...) {
+				std::cout << "line_comment:\"" << (std::find(in.begin(), in.end(), '#') + 1) << "\"XXXXX\n";
+				acc.emplace_back(std::find_if(std::find(in.begin(), in.end(), '#') + 1, in.end(), [](auto c) { return c != ' ' && c != '\t'; }));
+			}
+		};
+
+		template <>
+		struct action<sof_comments> {
+			template <class SOFComments, class LineCommentsAcc, class... TT>
+			static void apply(const input &, SOFComments & comments, LineCommentsAcc & acc, TT &&...) {
+				std::move(comments.begin(), comments.end(), std::back_inserter(comments));
+				acc.clear();
+			}
+		};
 	}
 }
 

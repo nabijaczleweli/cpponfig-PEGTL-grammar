@@ -24,6 +24,7 @@
 #include "grammar.hpp"
 #include <iostream>
 #include <string>
+#include <map>
 
 #define TEST_RULE(rule, var, name)                                                                                            \
 	do {                                                                                                                        \
@@ -75,25 +76,7 @@ static const string category_test[] = {"\"a\" {\n"
                                        "  \"adr 7\"=\"23\"\n"
                                        " \t \"2321d\"=\"3232  dsfe\"\n"
                                        "}\n"};
-static const string file_test[] = {
-    // clang-format off
-R"RAW("a" {
-}
-{ # asdf
- "asdf"="213" # asdsf
-  "123558r 78ujd"="123c ui2"
- 	 "2321d"="3232dsfe"
-}
-"asdf" { # asdf
- "as123df"="213" # asdsf
-  "adr 7"="23"
- 	 "2321d"="3232  dsfe"
-}
-
-# TIEM GMT
-)RAW"
-    // clang-format on
-};
+static const string file_test[] = {"#asdfasdf\n# fdsafdsa\n#fadadada\n\n"};///{sof_comments_test[2] + category_test[0] + '\n' + comment_test[0]};
 
 int main() {
 	cout << boolalpha;
@@ -114,5 +97,22 @@ int main() {
 	TEST_RULE(category, category_test, "Category");
 
 	TEST_RULE(file, file_test, "File");
+
+
+	using property_t = string;
+	using category_t = map<string, property_t>;
+
+	vector<string> line_comments_acc;
+	vector<string> sof_comments;
+	map<string, category_t> cats;
+	category_t * current_category{};
+
+	pegtl::parse<cpponfig::grammar::file, cpponfig::grammar::action>(file_test[0], "fajlel", line_comments_acc, sof_comments, cats, current_category);
+	for(const auto & c : line_comments_acc)
+		cout << c << '\n';
+	cout << '\n';
+	for(const auto & sofc : sof_comments)
+		cout << sofc << '\n';
+
 	return result;
 }
