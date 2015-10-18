@@ -63,20 +63,18 @@ static const string sof_comments_test[] = {"#fasdfsadfasdf\n"
 static const string property_test[]      = {R"("asdf 123 asdf"="asdf 13 asd")"};
 static const string property_line_test[] = {R"( 	"asdf"="asdf" #asdf\n)"};
 
-static const string unnamed_category_test[] = {"{\n"
-                                               "}\n",
-                                               "{ # asdf\n"
-                                               " \"asdf\"=\"213\" # asdsf\n"
-                                               "  \"123558r 78ujd\"=\"123c ui2\"\n"
-                                               " \t \"2321d\"=\"3232dsfe\"\n"
-                                               "}\n"};
-static const string named_category_test[] = {"\"a\" {\n"
-                                             "}\n",
-                                             "\"asdf\" { # asdf\n"
-                                             " \"as123df\"=\"213\" # asdsf\n"
-                                             "  \"adr 7\"=\"23\"\n"
-                                             " \t \"2321d\"=\"3232  dsfe\"\n"
-                                             "}\n"};
+static const string category_test[] = {"\"a\" {\n"
+                                       "}\n",
+                                       "{ # asdf\n"
+                                       " \"asdf\"=\"213\" # asdsf\n"
+                                       "  \"123558r 78ujd\"=\"123c ui2\"\n"
+                                       " \t \"2321d\"=\"3232dsfe\"\n"
+                                       "}\n",
+                                       "\"asdf\" { # asdf\n"
+                                       " \"as123df\"=\"213\" # asdsf\n"
+                                       "  \"adr 7\"=\"23\"\n"
+                                       " \t \"2321d\"=\"3232  dsfe\"\n"
+                                       "}\n"};
 
 
 int main() {
@@ -95,8 +93,7 @@ int main() {
 	TEST_RULE(property, property_test, "Property");
 	TEST_RULE(property_line, property_line_test, "Property line");
 
-	TEST_RULE(unnamed_category, unnamed_category_test, "Unnamed category");
-	TEST_RULE(named_category, named_category_test, "Named category");
+	TEST_RULE(category, category_test, "Category");
 
 	return result;
 }

@@ -41,7 +41,7 @@ namespace cpponfiguration {
 		// comment ::= '#' .*
 		struct comment : seq<string<'#'>, star<not_one<'\n'>>> {};
 
-		// commented ::= \s+ comment(opt)
+		// commented ::= \s+ [comment]
 		struct commented : opt<seq<plus<blank>, comment>> {};
 
 		// line_comment ::= \s* comment eol
@@ -58,15 +58,16 @@ namespace cpponfiguration {
 		struct property_line : seq<star<blank>, property, commented, eolf> {};
 
 
-		// unnamed_category ::= { commented eol
+		// category ::= [name \s*] { commented eol
 		//                      property_line*
 		//                      } eol+
-		struct unnamed_category : seq<star<blank>, string<'{'>, commented, eolf,  //
-		                              star<property_line>,                        //
-		                              string<'}'>, eolf> {};
+		struct category : seq<opt<name>, star<blank>, string<'{'>, commented, eolf,  //
+		                      star<property_line>,                                   //
+		                      string<'}'>, eolf> {};
 
-		// named_category ::= name \s* unnamed_category
-		struct named_category : seq<name, star<blank>, unnamed_category> {};
+
+		// file ::= sof_comments category* [eol comment]
+		struct file : seq<sof_comments, star<category>, opt<eolf, comment>> {};
 	}
 }
 
