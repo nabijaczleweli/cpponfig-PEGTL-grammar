@@ -42,6 +42,7 @@ using namespace std;
 
 static const string not_space_test[] = {"~", "`", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", "-",  "=", "1", "9", "8", "4",
                                         "a", "s", "d", "f", "A", "S", "D", "F", "[", "]", "{", "}", ";", ":", "\"", ",", ".", "/", "<", ">"};
+static const string name_test[] = {R"("asdf")", R"("asdf 2139")"};
 
 static const string comment_test[]      = {"#ffdsa", "# _9238.,;'[]1`", "#"};
 static const string commented_test[]    = {" \t\t\t\t   \t #", " \t# Top kek asdf", ""};
@@ -59,16 +60,23 @@ static const string sof_comments_test[] = {"#fasdfsadfasdf\n"
                                            "  \t\t \t\t \t    # #$%^&*(00-'\\asd`\n"
                                            "#\n\n\n"};
 
-static const string property_test[]      = {"asdf123asdf = asdf13asd"};
-static const string property_line_test[] = {" \tasdf = asdf #asdf\n"};
+static const string property_test[]      = {R"("asdf 123 asdf"="asdf 13 asd")"};
+static const string property_line_test[] = {R"( 	"asdf"="asdf" #asdf\n)"};
 
 static const string unnamed_category_test[] = {"{\n"
                                                "}\n",
                                                "{ # asdf\n"
-                                               " asdf = 213 # asdsf\n"
-                                               "  123558r78ujd = 123cui2\n"
-                                               " \t 2321d = 3232dsfe\n"
+                                               " \"asdf\"=\"213\" # asdsf\n"
+                                               "  \"123558r 78ujd\"=\"123c ui2\"\n"
+                                               " \t \"2321d\"=\"3232dsfe\"\n"
                                                "}\n"};
+static const string named_category_test[] = {"\"a\" {\n"
+                                             "}\n",
+                                             "\"asdf\" { # asdf\n"
+                                             " \"as123df\"=\"213\" # asdsf\n"
+                                             "  \"adr 7\"=\"23\"\n"
+                                             " \t \"2321d\"=\"3232  dsfe\"\n"
+                                             "}\n"};
 
 
 int main() {
@@ -77,6 +85,7 @@ int main() {
 	int result{};
 
 	TEST_RULE(not_space, not_space_test, "Nonspace");
+	TEST_RULE(name, name_test, "Name");
 
 	TEST_RULE(comment, comment_test, "Comment");
 	TEST_RULE(commented, commented_test, "Commented");
@@ -87,6 +96,7 @@ int main() {
 	TEST_RULE(property_line, property_line_test, "Property line");
 
 	TEST_RULE(unnamed_category, unnamed_category_test, "Unnamed category");
+	TEST_RULE(named_category, named_category_test, "Named category");
 
 	return result;
 }

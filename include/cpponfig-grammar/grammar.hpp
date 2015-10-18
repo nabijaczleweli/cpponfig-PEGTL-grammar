@@ -21,6 +21,9 @@
 //  DEALINGS IN THE SOFTWARE.
 
 
+#pragma once
+
+
 #include "pegtl.hh"
 
 
@@ -29,7 +32,10 @@ namespace cpponfiguration {
 		using namespace pegtl;
 
 		// not_space ::= '!'..'~'
-		struct not_space : range<'!', '~'> {};  // pretty much all printables
+		struct not_space : range<'!', '~'> {};  // `print` except ' '
+
+		// name ::= '"' .* '"'
+		struct name : if_must<one<'"'>, until<one<'"'>, print>> {};
 
 
 		// comment ::= '#' .*
@@ -45,19 +51,22 @@ namespace cpponfiguration {
 		struct sof_comments : seq<star<line_comment>, star<eolf>> {};
 
 
-		// property ::= not_space+ \s+ '=' \s+ not_space+
-		struct property : seq<plus<not_space>, blank, string<'='>, blank, plus<not_space>> {};
+		// property ::= name '=' name
+		struct property : seq<name, string<'='>, name> {};
 
 		// property_line ::= \s* property commented eol
 		struct property_line : seq<star<blank>, property, commented, eolf> {};
 
 
-		// unnamed_category ::= \s* { commented eol
+		// unnamed_category ::= { commented eol
 		//                      property_line*
 		//                      } eol+
 		struct unnamed_category : seq<star<blank>, string<'{'>, commented, eolf,  //
 		                              star<property_line>,                        //
 		                              string<'}'>, eolf> {};
+
+		// named_category ::= name \s* unnamed_category
+		struct named_category : seq<name, star<blank>, unnamed_category> {};
 	}
 }
 
