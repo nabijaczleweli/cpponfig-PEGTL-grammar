@@ -75,7 +75,25 @@ static const string category_test[] = {"\"a\" {\n"
                                        "  \"adr 7\"=\"23\"\n"
                                        " \t \"2321d\"=\"3232  dsfe\"\n"
                                        "}\n"};
+static const string file_test[] = {
+    // clang-format off
+R"RAW("a" {
+}
+{ # asdf
+ "asdf"="213" # asdsf
+  "123558r 78ujd"="123c ui2"
+ 	 "2321d"="3232dsfe"
+}
+"asdf" { # asdf
+ "as123df"="213" # asdsf
+  "adr 7"="23"
+ 	 "2321d"="3232  dsfe"
+}
 
+# TIEM GMT
+)RAW"
+    // clang-format on
+};
 
 int main() {
 	cout << boolalpha;
@@ -95,5 +113,6 @@ int main() {
 
 	TEST_RULE(category, category_test, "Category");
 
+	TEST_RULE(file, file_test, "File");
 	return result;
 }

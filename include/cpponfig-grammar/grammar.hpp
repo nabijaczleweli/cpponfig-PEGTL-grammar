@@ -66,8 +66,16 @@ namespace cpponfiguration {
 		                      string<'}'>, eolf> {};
 
 
-		// file ::= sof_comments category* [eol comment]
-		struct file : seq<sof_comments, star<category>, opt<eolf, comment>> {};
+		// file ::= sof_comments
+		//          category*
+		//          [eol comment]
+		//          eol*
+		//          eof
+		struct file : seq<sof_comments,        //
+		                  star<category>,      //
+		                  opt<eolf, comment>,  //
+		                  star<eol>,           //
+		                  eof> {};
 	}
 }
 
