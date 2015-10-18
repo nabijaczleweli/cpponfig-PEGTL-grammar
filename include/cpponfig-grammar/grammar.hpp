@@ -28,14 +28,36 @@ namespace cpponfiguration {
 	namespace grammar {
 		using namespace pegtl;
 
+		// not_space ::= '!'..'~'
+		struct not_space : range<'!', '~'> {};  // pretty much all printables
+
+
 		// comment ::= '#' .*
 		struct comment : seq<string<'#'>, star<any>> {};
 
-		// line_comment ::= \s* '#' .* \n
+		// commented ::= \s+ comment(opt)
+		struct commented : opt<seq<plus<blank>, comment>> {};
+
+		// line_comment ::= \s* '#' .* eol
 		struct line_comment : seq<star<blank>, comment, eolf> {};
 
-		// sof_comments ::= line_comment* \n(opt)
-		struct sof_comments : seq<star<line_comment>, opt<eolf, opt<eolf, opt<eolf>>>> {};
+		// sof_comments ::= line_comment* eol*
+		struct sof_comments : seq<star<line_comment>, star<eolf>> {};
+
+
+		// property ::= not_space+ \s+ '=' \s+ not_space+
+		struct property : seq<plus<not_space>, blank, string<'='>, blank, plus<not_space>> {};
+
+		// property_line ::= \s* property commented eol
+		struct property_line : seq<star<blank>, property, commented, eolf> {};
+
+
+		// unnamed_category ::= \s* { commented eol
+		//                      property_line*
+		//                      } eol+
+		struct unnamed_category : seq<star<blank>, string<'{'>, commented, eolf,  //
+		                              star<property_line>,                        //
+		                              string<'}'>, plus<eolf>> {};
 	}
 }
 

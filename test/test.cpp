@@ -40,7 +40,11 @@
 using namespace std;
 
 
+static const string not_space_test[] = {"~", "`", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", "-",  "=", "1", "9", "8", "4",
+                                        "a", "s", "d", "f", "A", "S", "D", "F", "[", "]", "{", "}", ";", ":", "\"", ",", ".", "/", "<", ">"};
+
 static const string comment_test[]      = {"#ffdsa", "# _9238.,;'[]1`", "#"};
+static const string commented_test[]    = {" \t\t\t\t   \t #", " \t# Top kek asdf", ""};
 static const string line_comment_test[] = {"#fasdfsadfasdf\n", "  \t\t \t\t \t    # #$%^&*(00-'\\asd`\n", "#\n"};
 static const string sof_comments_test[] = {"#fasdfsadfasdf\n"
                                            "  \t\t \t\t \t    # #$%^&*(00-'\\asd`\n"
@@ -55,15 +59,34 @@ static const string sof_comments_test[] = {"#fasdfsadfasdf\n"
                                            "  \t\t \t\t \t    # #$%^&*(00-'\\asd`\n"
                                            "#\n\n\n"};
 
+static const string property_test[]      = {"asdf123asdf = asdf13asd"};
+static const string property_line_test[] = {" \tasdf = asdf #asdf\n"};
+
+static const string unnamed_category_test[] = {"{\n"
+                                               "}\n",
+                                               "{ # asdf\n"
+                                               " asdf = 213 # asdsf\n"
+                                               "  123558r78ujd = 123cui2\n"
+                                               " \t 2321d = 3232dsfe\n"
+                                               "}\n"};
+
 
 int main() {
 	cout << boolalpha;
 
 	int result{};
 
+	TEST_RULE(not_space, not_space_test, "Nonspace");
+
 	TEST_RULE(comment, comment_test, "Comment");
+	TEST_RULE(commented, commented_test, "Commented");
 	TEST_RULE(line_comment, line_comment_test, "Line comment");
 	TEST_RULE(sof_comments, sof_comments_test, "SOF comment");
+
+	TEST_RULE(property, property_test, "Property");
+	TEST_RULE(property_line, property_line_test, "Property line");
+
+	TEST_RULE(unnamed_category, unnamed_category_test, "Unnamed category");
 
 	return result;
 }
